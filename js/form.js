@@ -1,5 +1,5 @@
 /* ============================================================
-   신청 폼 로직 (중복 방지 및 오류 처리 개선)
+   신청 폼 로직 (시간 표시 및 중복 방지 개선)
    ============================================================ */
 (function () {
   "use strict";
@@ -8,7 +8,7 @@
   var form = document.getElementById("visitationForm");
   var submitBtn = document.getElementById("submitBtn");
   var statusEl = document.getElementById("formStatus");
-  var bookedSlots = {}; // { "2026-10-19|slot_0": true, ... }
+  var bookedSlots = {}; // { "2026-10-19|08:00 - 09:00": true, ... }
 
   if (!form) return;
 
@@ -70,7 +70,8 @@
     slotsDiv.className = "time-grid";
 
     CONFIG.TIME_SLOTS.forEach(function (slot) {
-      var key = selectedDate + "|" + slot.id;
+      // 실제 시간 레이블로 키 생성 (예: "2026-10-19|08:00 - 09:00")
+      var key = selectedDate + "|" + slot.label;
       var isBooked = bookedSlots[key];
       var div = document.createElement("div");
       div.className = "radio-item" + (isBooked ? " disabled" : "");
@@ -98,6 +99,7 @@
         if (data.bookings && Array.isArray(data.bookings)) {
           bookedSlots = {};
           data.bookings.forEach(function (booking) {
+            // 실제 시간 문자열로 키 생성 (예: "2026-10-19|08:00 - 09:00")
             var key = booking.date + "|" + booking.timeSlot;
             bookedSlots[key] = true;
           });
@@ -135,11 +137,14 @@
       return;
     }
 
-    // 클라이언트 단 중복 체크
-    var key = date + "|" + timeSlot;
-    if (bookedSlots[key]) {
-      setStatus("이미 신청된 날짜/시간입니다. 다른 시간을 선택해주세요.", false);
-      return;
+    // 클라이언트 단 중복 체크: 실제 시간 레이블과 비교
+    var selectedSlot = CONFIG.TIME_SLOTS.find(function (s) { return s.id === timeSlot; });
+    if (selectedSlot) {
+      var key = date + "|" + selectedSlot.label;
+      if (bookedSlots[key]) {
+        setStatus("이미 신청된 날짜/시간입니다. 다른 시간을 선택해주세요.", false);
+        return;
+      }
     }
 
     submitBtn.disabled = true;
@@ -148,7 +153,7 @@
     var payload = {
       action: "save",
       date: date,
-      timeSlot: timeSlot,
+      timeSlot: timeSlot,  // slot_0 같은 ID를 전송하면 서버에서 변환됨
       name: name,
       address: address,
       timestamp: new Date().toISOString()
@@ -169,7 +174,7 @@
               if (data.bookings) {
                 // 방금 신청한 데이터가 들어왔는지 확인
                 var found = data.bookings.some(function (b) {
-                  return b.date === date && b.timeSlot === timeSlot && b.name === name;
+                  return b.date === date && b.name === name;
                 });
                 
                 if (found) {
@@ -186,6 +191,7 @@
               setStatus("✅ 신청이 완료되었습니다.", true);
               form.reset();
               submitBtn.disabled = false;
+              loadBookedSlots();
             });
         }, 1000);
       })
