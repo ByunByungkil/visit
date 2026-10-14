@@ -5,7 +5,7 @@ window.DOCHOGO_CONFIG = {
   // Google Apps Script 웹앱 배포 URL
   // code.gs 를 스프레드시트에 붙여넣고 "웹 앱으로 배포" 한 뒤의 URL
   // 예: https://script.google.com/macros/s/AKfycb.../exec
-  GAS_WEB_APP_URL: "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbzcL5soEaCrJ9AqioMVa4H6XDtR68m1NmRJegzTLwc4u57b5EOoApU0Hw5wLUkCGVphmg/exec/exec",
+  GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbzcL5soEaCrJ9AqioMVa4H6XDtR68m1NmRJegzTLwc4u57b5EOoApU0Hw5wLUkCGVphmg/exec/exec",
 
   // 심방 날짜 범위
   START_DATE: "2026-10-19", // 월요일
