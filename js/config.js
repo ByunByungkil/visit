@@ -1,5 +1,5 @@
 window.DOCHOGO_CONFIG = {
-  GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbzcL5soEaCrJ9AqioMVa4H6XDtR68m1NmRJegzTLwc4u57b5EOoApU0Hw5wLUkCGVphmg/exec",
+  GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbxj5okwWAMtMO0QbuieF__sm9sshW9nvtGDv3G_0-Ubg-U_RFiKQ5xpPFjpUdvlC6OKaw/exec",
   START_DATE: "2026-10-19",
   END_DATE: "2026-10-24",
   TIME_SLOTS: [
