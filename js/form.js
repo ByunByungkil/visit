@@ -1,5 +1,5 @@
 /* ============================================================
-   신청 폼 로직
+   신청 폼 로직 (중복 방지 및 오류 처리 개선)
    ============================================================ */
 (function () {
   "use strict";
@@ -86,6 +86,12 @@
   function loadBookedSlots() {
     setStatus("예약 현황을 불러오는 중...", false);
 
+    if (!CONFIG.GAS_WEB_APP_URL || CONFIG.GAS_WEB_APP_URL.indexOf("여기에") !== -1) {
+      setStatus("⚠️ GAS_WEB_APP_URL이 설정되지 않았습니다. js/config.js를 확인해주세요.", false);
+      renderDateOptions();
+      return;
+    }
+
     fetch(CONFIG.GAS_WEB_APP_URL + "?action=list")
       .then(function (res) { return res.json(); })
       .then(function (data) {
@@ -101,8 +107,8 @@
         updateAvailableSlots();
       })
       .catch(function (err) {
-        console.error(err);
-        setStatus("예약 현황을 불러오지 못했습니다.", false);
+        console.error("예약 데이터 로드 오류:", err);
+        setStatus("⚠️ 예약 현황을 불러오지 못했습니다. GAS URL을 확인하고 잠시 후 다시 시도해주세요.", false);
         renderDateOptions();
         updateAvailableSlots();
       });
@@ -129,6 +135,13 @@
       return;
     }
 
+    // 클라이언트 단 중복 체크
+    var key = date + "|" + timeSlot;
+    if (bookedSlots[key]) {
+      setStatus("이미 신청된 날짜/시간입니다. 다른 시간을 선택해주세요.", false);
+      return;
+    }
+
     submitBtn.disabled = true;
     setStatus("신청을 저장하는 중...", false);
 
@@ -148,17 +161,38 @@
       body: JSON.stringify(payload)
     })
       .then(function () {
-        setStatus("신청이 완료되었습니다. 감사합니다!", true);
-        form.reset();
+        // 1초 기다린 후 데이터를 다시 불러옴 (저장 확인)
         setTimeout(function () {
-          loadBookedSlots();
-          submitBtn.disabled = false;
-        }, 1500);
+          fetch(CONFIG.GAS_WEB_APP_URL + "?action=list")
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+              if (data.bookings) {
+                // 방금 신청한 데이터가 들어왔는지 확인
+                var found = data.bookings.some(function (b) {
+                  return b.date === date && b.timeSlot === timeSlot && b.name === name;
+                });
+                
+                if (found) {
+                  setStatus("✅ 신청이 완료되었습니다. 감사합니다!", true);
+                  form.reset();
+                  loadBookedSlots(); // 예약 현황 업데이트
+                } else {
+                  setStatus("⚠️ 신청은 되었지만 확인되지 않습니다. 새로고침 후 확인해주세요.", false);
+                }
+              }
+              submitBtn.disabled = false;
+            })
+            .catch(function () {
+              setStatus("✅ 신청이 완료되었습니다.", true);
+              form.reset();
+              submitBtn.disabled = false;
+            });
+        }, 1000);
       })
       .catch(function (err) {
-        console.error(err);
+        console.error("전송 오류:", err);
         submitBtn.disabled = false;
-        setStatus("전송 중 오류가 발생했습니다. 다시 시도해주세요.", false);
+        setStatus("⚠️ 전송 중 오류가 발생했습니다. GAS URL을 확인하고 다시 시도해주세요.", false);
       });
   });
 
