@@ -1,5 +1,5 @@
-/* ============================================================
-   공개 예약 캘린더 로직
+* ============================================================
+   공개 예약 캘린더 로직 (시간 표시 통일)
    ============================================================ */
 (function () {
   "use strict";
@@ -28,9 +28,10 @@
     return parts[1] + "." + parts[2] + "(" + day + ")";
   }
 
-  function getCountByDateAndTime(date, timeSlot) {
+  // 시간 레이블로 신청 인원 카운트
+  function getCountByDateAndTime(date, timeLabel) {
     return allBookings.filter(function (b) {
-      return b.date === date && b.timeSlot === timeSlot;
+      return b.date === date && b.timeSlot === timeLabel;
     }).length;
   }
 
@@ -74,7 +75,8 @@
 
       var slotsDiv = card.querySelector(".day-slots");
       CONFIG.TIME_SLOTS.forEach(function (slot) {
-        var count = getCountByDateAndTime(dateStr, slot.id);
+        // 실제 시간 레이블로 카운트
+        var count = getCountByDateAndTime(dateStr, slot.label);
         var slotEl = document.createElement("div");
         slotEl.className = "slot" + (count > 0 ? " booked" : " available");
         slotEl.innerHTML =
