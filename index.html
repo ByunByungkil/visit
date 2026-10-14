@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>도초동부성결교회 가을대심방 신청</title>
+<meta name="description" content="2026년 10월 도초동부성결교회 가을대심방 신청 페이지">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hero">
+  <div class="container">
+    <p class="subtitle">2026년도 가을대심방</p>
+    <h1>도초동부성결교회<br>가을대심방 신청</h1>
+    <p>10월 19일(월) ~ 24일(토)</p>
+  </div>
+</header>
+
+<!-- MAIN FORM PAGE -->
+<section class="page">
+  <div class="container">
+    <h2>대심방 신청</h2>
+    <p class="page-lede">아래 정보를 입력하고 희망 날짜와 시간을 선택해주세요.<br>선착순으로 예약됩니다.</p>
+
+    <div class="form-card">
+      <form id="visitationForm" novalidate>
+        
+        <!-- 성명 -->
+        <div class="field-group">
+          <label for="visitorName">성명</label>
+          <input type="text" id="visitorName" name="visitorName" placeholder="홍길동" required>
+        </div>
+
+        <!-- 주소 -->
+        <div class="field-group">
+          <label for="visitorAddress">주소</label>
+          <textarea id="visitorAddress" name="visitorAddress" placeholder="서울시 강남구..." required></textarea>
+        </div>
+
+        <!-- 방문 날짜 -->
+        <div class="field-group">
+          <label>방문 날짜</label>
+          <div class="radio-group" id="dateOptions">
+            <!-- 동적으로 생성됨 -->
+          </div>
+        </div>
+
+        <!-- 방문 시간 -->
+        <div class="field-group">
+          <label>방문 시간</label>
+          <div id="timeOptions">
+            <!-- 동적으로 생성됨 -->
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">신청하기</button>
+        <p class="form-status" id="formStatus"></p>
+      </form>
+    </div>
+
+    <div style="margin-top:40px;padding:20px;background:#faf7f2;border-radius:4px;text-align:center;">
+      <p style="margin:0;color:#5a4a42;font-size:14px;">
+        <strong>예약 현황을 실시간으로 확인하세요</strong><br>
+        <a href="calendar.html" style="color:#c85a3a;text-decoration:none;font-weight:600;border-bottom:1px solid #c85a3a;">→ 공개 캘린더 보기</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p class="church-name">도초동부성결교회</p>
+    <p>문의: 000-0000-0000</p>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/form.js"></script>
+</body>
+</html>
