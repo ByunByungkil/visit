@@ -3,7 +3,7 @@
    ============================================================ */
 window.DOCHOGO_CONFIG = {
   // Google Apps Script 웹앱 배포 URL
-  GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwnFHyKTNg4VOrqywDS0KoFOMFJmx4CifoYQ58u0Z5xzCnLFMNWH6U4f5AS96kcd1lEKQ/exec",
+  GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbzAq1JeDKgLEx8MEa_6qMkDO2RrKF4JQJgpj-3n8AEKBBplpCNaWWBdU3nYFK6owEmZmQ/exec",
 
   // 심방 날짜 범위
   START_DATE: "2026-10-19", // 월요일
